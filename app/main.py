@@ -3,7 +3,7 @@ import os
 import subprocess
 
 def main():
-    cmds = ["echo", "exit", "type"]
+    cmds = ["echo", "exit", "type", "pwd"]
     paths = os.environ.get("PATH", "").split(os.pathsep)
     while True:
         sys.stdout.write("$ ")
