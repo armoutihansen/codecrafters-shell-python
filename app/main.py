@@ -22,13 +22,9 @@ def main():
             else:
                 print(f"{arg}: not found")
         elif is_valid_command(command.split()[0], paths):
-            result = subprocess.run(command.split())
-            # print(result.stdout.decode())
-            # print(f"Program was passed with {len(command.split())} args (including the program name).")
-            # print(f"Arg #0 (program name): {command.split()[0]}")
-            # for i, arg in enumerate(command.split()[1:], start=1):
-            #     print(f"Arg #{i}: {arg}")
-            # print(f"Program Signature: {status}")
+            subprocess.run(command.split())
+        elif command == "pwd":
+            print(os.getcwd())
         else:
             print(f"{command}: command not found")
     
