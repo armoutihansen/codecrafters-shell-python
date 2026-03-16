@@ -16,17 +16,33 @@ def main():
             arg = command.split()[1]
             if arg in cmds:
                 print(f"{arg} is a shell builtin")
+            elif is_valid_command(arg, paths):
+                print(f"{arg} is {os.path.abspath(get_command_path(arg, paths))}")
+            # else:
+            #     for path in paths:
+            #         full_path = os.path.join(path, arg)
+            #         if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+            #             print(f"{arg} is {os.path.abspath(full_path)}")
+            #             break
             else:
-                for path in paths:
-                    full_path = os.path.join(path, arg)
-                    if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
-                        print(f"{arg} is {os.path.abspath(full_path)}")
-                        break
-                else:
-                    print(f"{arg}: not found")
+                print(f"{arg}: not found")
         else:
             print(f"{command}: command not found")
     
+def is_valid_command(cmd: str, paths: list) -> bool:
+    for path in paths:
+        full_path = os.path.join(path, cmd)
+        if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+            return True
+    return False
+
+def get_command_path(cmd: str, paths: list) -> str:
+    for path in paths:
+        full_path = os.path.join(path, cmd)
+        if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+            return full_path
+    return ""
+
 
 if __name__ == "__main__":
     main()
