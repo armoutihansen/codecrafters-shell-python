@@ -9,7 +9,10 @@ def main():
         command = input()
         if command == "exit":
             break
-        print(f"{command}: command not found")
+        elif command.split()[0] == "echo":
+            print(" ".join(command.split()[1:]))
+        else:
+            print(f"{command}: command not found")
     
 
 if __name__ == "__main__":
