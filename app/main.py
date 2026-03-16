@@ -1,9 +1,9 @@
 import sys
-
+import os
 
 def main():
-    # TODO: Uncomment the code below to pass the first stage
     cmds = ["echo", "exit", "type"]
+    paths = os.environ.get("PATH", "").split(os.pathsep)
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
@@ -13,10 +13,17 @@ def main():
         elif command.split()[0] == "echo":
             print(" ".join(command.split()[1:]))
         elif command.split()[0] == "type":
-            if command.split()[1] in cmds:
-                print(f"{command.split()[1]} is a shell builtin")
+            arg = command.split()[1]
+            if arg in cmds:
+                print(f"{arg} is a shell builtin")
             else:
-                print(f"{command.split()[1]}: not found")
+                for path in paths:
+                    full_path = os.path.join(path, arg)
+                    if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
+                        print(f"{arg} is {os.path.abspath(full_path)}")
+                        break
+                else:
+                    print(f"{arg}: not found")
         else:
             print(f"{command}: command not found")
     
