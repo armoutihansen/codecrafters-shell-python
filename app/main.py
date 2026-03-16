@@ -3,28 +3,42 @@ import os
 import subprocess
 
 def main():
-    cmds = ["echo", "exit", "type", "pwd"]
+    cmds = ["echo", "exit", "type", "pwd", "cd"]
     paths = os.environ.get("PATH", "").split(os.pathsep)
     while True:
         sys.stdout.write("$ ")
         sys.stdout.flush()
         command = input()
-        if command == "exit":
+        parts = command.split()
+
+        if not parts:
+            continue
+
+        if parts[0] == "exit":
             break
-        elif command.split()[0] == "echo":
-            print(" ".join(command.split()[1:]))
-        elif command.split()[0] == "type":
-            arg = command.split()[1]
+        elif parts[0] == "echo":
+            print(" ".join(parts[1:]))
+        elif parts[0] == "type":
+            if len(parts) < 2:
+                continue
+            arg = parts[1]
             if arg in cmds:
                 print(f"{arg} is a shell builtin")
             elif is_valid_command(arg, paths):
                 print(f"{arg} is {os.path.abspath(get_command_path(arg, paths))}")
             else:
                 print(f"{arg}: not found")
-        elif is_valid_command(command.split()[0], paths):
-            subprocess.run(command.split())
-        elif command == "pwd":
+        elif parts[0] == "pwd":
             print(os.getcwd())
+        elif parts[0] == "cd":
+            target = parts[1] if len(parts) > 1 else os.path.expanduser("~")
+            target = os.path.expanduser(target)
+            try:
+                os.chdir(target)
+            except FileNotFoundError:
+                print(f"cd: {target}: No such file or directory")
+        elif is_valid_command(parts[0], paths):
+            subprocess.run(parts)
         else:
             print(f"{command}: command not found")
     
