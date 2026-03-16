@@ -1,5 +1,6 @@
 import sys
 import os
+import subprocess
 
 def main():
     cmds = ["echo", "exit", "type"]
@@ -18,14 +19,16 @@ def main():
                 print(f"{arg} is a shell builtin")
             elif is_valid_command(arg, paths):
                 print(f"{arg} is {os.path.abspath(get_command_path(arg, paths))}")
-            # else:
-            #     for path in paths:
-            #         full_path = os.path.join(path, arg)
-            #         if os.path.isfile(full_path) and os.access(full_path, os.X_OK):
-            #             print(f"{arg} is {os.path.abspath(full_path)}")
-            #             break
             else:
                 print(f"{arg}: not found")
+        elif is_valid_command(command.split()[0], paths):
+            result = subprocess.run(command, shell=True, capture_output=True)
+            print(result.stdout.decode())
+            # print(f"Program was passed with {len(command.split())} args (including the program name).")
+            # print(f"Arg #0 (program name): {command.split()[0]}")
+            # for i, arg in enumerate(command.split()[1:], start=1):
+            #     print(f"Arg #{i}: {arg}")
+            # print(f"Program Signature: {status}")
         else:
             print(f"{command}: command not found")
     
