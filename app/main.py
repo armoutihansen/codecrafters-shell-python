@@ -22,7 +22,7 @@ def main():
             else:
                 print(f"{arg}: not found")
         elif is_valid_command(command.split()[0], paths):
-            result = subprocess.run(command, shell=True, capture_output=True)
+            result = subprocess.run(command.split())
             print(result.stdout.decode())
             # print(f"Program was passed with {len(command.split())} args (including the program name).")
             # print(f"Arg #0 (program name): {command.split()[0]}")
